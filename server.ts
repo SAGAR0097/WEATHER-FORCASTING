@@ -30,7 +30,7 @@ async function connectToDatabase() {
   }
 }
 
-connectToDatabase();
+// connectToDatabase(); // Moved to bootstrap
 
 // Schemas
 const userSchema = new mongoose.Schema({
@@ -229,4 +229,9 @@ async function startServer() {
   });
 }
 
-startServer();
+async function bootstrap() {
+  await connectToDatabase();
+  await startServer();
+}
+
+bootstrap();
