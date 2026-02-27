@@ -13,6 +13,7 @@ export default function App() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
   const [unit, setUnit] = useState<'celsius' | 'fahrenheit'>('celsius');
 
@@ -42,16 +43,18 @@ export default function App() {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
     if (isRegistering) {
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
-      if (!passwordRegex.test(password)) {
-        setError('Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.');
+      if (password.length < 6) {
+        setError('Password must be at least 6 characters long.');
+        setIsSubmitting(false);
         return;
       }
     }
 
     const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';
+    console.log(`Frontend: Attempting ${isRegistering ? 'registration' : 'login'} at ${endpoint}`);
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -59,6 +62,7 @@ export default function App() {
         body: JSON.stringify({ username, password })
       });
       
+      console.log(`Frontend: Received response status ${res.status}`);
       const contentType = res.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const text = await res.text();
@@ -71,10 +75,12 @@ export default function App() {
       if (res.ok) {
         login(data.token, data.user);
       } else {
-        setError(data.error);
+        setError(data.error || 'Authentication failed');
       }
     } catch {
       setError('Something went wrong');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -193,9 +199,10 @@ export default function App() {
             {error && <p className="text-red-500 text-xs text-center">{error}</p>}
             <button
               type="submit"
-              className="w-full py-4 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-sky-600/20"
+              disabled={isSubmitting}
+              className="w-full py-4 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl transition-all active:scale-[0.98] shadow-lg shadow-sky-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isRegistering ? 'Create Account' : 'Sign In'}
+              {isSubmitting ? 'Processing...' : (isRegistering ? 'Create Account' : 'Sign In')}
             </button>
           </form>
 
@@ -205,6 +212,13 @@ export default function App() {
           >
             {isRegistering ? 'Already have an account? Sign in' : "Don't have an account? Register"}
           </button>
+
+          <div className="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-100">
+            <p className="text-[10px] text-amber-700 leading-relaxed text-center">
+              <span className="font-bold uppercase block mb-1">Development Mode</span>
+              This app uses an in-memory database. Your account is saved during your session, but will reset whenever the server restarts for updates.
+            </p>
+          </div>
         </motion.div>
       </div>
     );
