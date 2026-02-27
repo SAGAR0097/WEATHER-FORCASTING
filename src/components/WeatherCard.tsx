@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Star, Trash2, Wind, Thermometer, Cloud, Sun, CloudSun, CloudFog, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, RefreshCw } from 'lucide-react';
+import { Star, Trash2, Wind, Thermometer, Cloud, Sun, CloudSun, CloudFog, CloudDrizzle, CloudRain, CloudSnow, CloudLightning, RefreshCw, Sparkles } from 'lucide-react';
 import { useWeather } from '../hooks/useWeather';
 import { WEATHER_INTERPRETATION } from '../lib/utils';
 import { City } from '../types';
@@ -152,7 +152,22 @@ export function WeatherCard({ city, unit, onDelete, onToggleFavorite }: WeatherC
           </div>
 
           {/* AI Insight Section */}
-          
+          <div className="mt-6 pt-6 border-t border-slate-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-3 h-3 text-sky-500" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">SkyCast AI Insight</span>
+            </div>
+            {loadingInsight ? (
+              <div className="space-y-2">
+                <div className="h-3 bg-slate-100 rounded w-full animate-pulse" />
+                <div className="h-3 bg-slate-100 rounded w-3/4 animate-pulse" />
+              </div>
+            ) : (
+              <p className="text-xs text-slate-600 leading-relaxed italic">
+                "{insight || 'Analyzing weather patterns for localized advice...'}"
+              </p>
+            )}
+          </div>
         </>
       )}
     </motion.div>
