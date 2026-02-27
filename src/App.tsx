@@ -67,7 +67,13 @@ export default function App() {
       if (!contentType || !contentType.includes('application/json')) {
         const text = await res.text();
         console.error("Non-JSON response received:", text);
-        setError('Server returned an invalid response. Please check if the backend is running.');
+        
+        if (text.includes('NOT_FOUND') || res.status === 404) {
+          setError('The server could not find the endpoint. If you are running locally in VS Code, make sure you are using port 3000, not 5173.');
+        } else {
+          setError('Server returned an invalid response. The backend might be crashing or still starting up.');
+        }
+        setIsSubmitting(false);
         return;
       }
 
@@ -212,8 +218,6 @@ export default function App() {
           >
             {isRegistering ? 'Already have an account? Sign in' : "Don't have an account? Register"}
           </button>
-
-          
         </motion.div>
       </div>
     );
@@ -280,7 +284,7 @@ export default function App() {
             Welcome back <span className="text-sky-600">{user.username}</span>
           </motion.h2>
           <p className="text-slate-500 max-w-2xl mx-auto">
-            Manage your global weather dashboard and your favorite locations.
+            Manage your global weather dashboard and get AI-powered insights for your favorite locations.
           </p>
         </header>
 
