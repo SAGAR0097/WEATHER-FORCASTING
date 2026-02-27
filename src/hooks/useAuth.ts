@@ -21,7 +21,7 @@ export function useAuth() {
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);
-    window.location.reload();
+    // Removed window.location.reload() for smoother transition
   };
 
   return { user, token, login, logout, loading };
