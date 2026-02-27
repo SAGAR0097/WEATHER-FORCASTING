@@ -17,19 +17,14 @@ async function connectToDatabase() {
   try {
     let uri = process.env.MONGODB_URI;
     if (!uri) {
-      console.log("No MONGODB_URI found, starting persistent MongoMemoryServer...");
-      const mongod = await MongoMemoryServer.create({
-        instance: {
-          dbPath: './mongo-data',
-          storageEngine: 'wiredTiger',
-        },
-      });
+      console.log("No MONGODB_URI found, starting MongoMemoryServer...");
+      const mongod = await MongoMemoryServer.create();
       uri = mongod.getUri();
-      console.log("Persistent MongoMemoryServer started.");
+      console.log("MongoMemoryServer started.");
     }
     
     await mongoose.connect(uri);
-    console.log("Connected to MongoDB:", uri.includes('mongo-data') ? 'Persistent Memory Server' : 'External');
+    console.log("Connected to MongoDB:", uri.includes('127.0.0.1') ? 'Memory Server' : 'External');
   } catch (err) {
     console.error("MongoDB connection error:", err);
     process.exit(1);
