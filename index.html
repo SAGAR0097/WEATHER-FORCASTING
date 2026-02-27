@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Forecast</title>
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <circle cx="35" cy="35" r="20" fill="orange"/>
+          <ellipse cx="60" cy="60" rx="30" ry="18" fill="lightgray"/>
+          </svg>'>
+    <script>
+      // Early suppression of benign Vite HMR WebSocket errors
+      (function() {
+        const suppress = (e) => {
+          const r = e.reason || e.error || e.message;
+          if (r && (
+            (typeof r === 'string' && r.includes('WebSocket')) ||
+            (r.message && r.message.includes('WebSocket'))
+          )) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        };
+        window.addEventListener('unhandledrejection', suppress);
+        window.addEventListener('error', suppress);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

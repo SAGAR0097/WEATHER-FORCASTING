@@ -1,0 +1,5 @@
+{
+  "name": "SkyCast Multi-User Weather Dashboard",
+  "description": "A professional multi-user weather dashboard with real-time data, city management, favorites, and AI-powered weather insights.",
+  "requestFramePermissions": []
+}
