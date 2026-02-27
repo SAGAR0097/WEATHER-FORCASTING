@@ -213,12 +213,7 @@ export default function App() {
             {isRegistering ? 'Already have an account? Sign in' : "Don't have an account? Register"}
           </button>
 
-          <div className="mt-8 p-4 bg-amber-50 rounded-lg border border-amber-100">
-            <p className="text-[10px] text-amber-700 leading-relaxed text-center">
-              <span className="font-bold uppercase block mb-1">Development Mode</span>
-              This app uses an in-memory database. Your account is saved during your session, but will reset whenever the server restarts for updates.
-            </p>
-          </div>
+          
         </motion.div>
       </div>
     );
@@ -285,7 +280,7 @@ export default function App() {
             Welcome back <span className="text-sky-600">{user.username}</span>
           </motion.h2>
           <p className="text-slate-500 max-w-2xl mx-auto">
-            Manage your global weather dashboard and get AI-powered insights for your favorite locations.
+            Manage your global weather dashboard and your favorite locations.
           </p>
         </header>
 
