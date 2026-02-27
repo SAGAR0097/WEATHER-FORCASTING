@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { CitySearch } from './components/CitySearch';
 import { WeatherCard } from './components/WeatherCard';
-import { LogOut, CloudRain, User as UserIcon, Plus, LayoutDashboard, Star, Sparkles, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { LogOut, CloudRain, User as UserIcon, Plus, LayoutDashboard, Star, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { City } from './types';
 
@@ -15,7 +15,6 @@ export default function App() {
   const [error, setError] = useState('');
   const [cities, setCities] = useState<City[]>([]);
   const [unit, setUnit] = useState<'celsius' | 'fahrenheit'>('celsius');
-  const [isDeletingAll, setIsDeletingAll] = useState(false);
 
   const fetchCities = useCallback(async () => {
     if (!token) return;
@@ -120,32 +119,6 @@ export default function App() {
     }
   };
 
-  const deleteAllCities = async () => {
-    if (!window.confirm('Are you sure you want to delete ALL cities from your dashboard? This cannot be undone.')) return;
-    setIsDeletingAll(true);
-    console.log("Frontend: Sending DELETE request to /api/cities");
-    try {
-      const res = await fetch('/api/cities', {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      console.log("Frontend: DELETE response status:", res.status);
-      if (res.ok) {
-        setCities([]);
-        console.log("Frontend: Cities state cleared");
-      } else {
-        const errorData = await res.json().catch(() => ({}));
-        console.error("Frontend: DELETE failed:", errorData);
-        alert(`Failed to delete cities: ${errorData.error || 'Unknown error'}`);
-      }
-    } catch (err) {
-      console.error("Frontend: DELETE error:", err);
-      alert('Network error while deleting cities');
-    } finally {
-      setIsDeletingAll(false);
-    }
-  };
-
   const toggleFavorite = async (id: string, current: boolean) => {
     try {
       const res = await fetch(`/api/cities/${id}/favorite`, {
@@ -184,7 +157,7 @@ export default function App() {
               <CloudRain className="w-8 h-8 text-sky-600" />
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-900">SkyCast</h1>
-            <p className="text-slate-400 text-sm mt-1">Weather Forecasting</p>
+            <p className="text-slate-400 text-sm mt-1">Professional Weather Intelligence</p>
           </div>
 
           <form onSubmit={handleAuth} className="space-y-4">
@@ -298,7 +271,7 @@ export default function App() {
             Welcome back <span className="text-sky-600">{user.username}</span>
           </motion.h2>
           <p className="text-slate-500 max-w-2xl mx-auto">
-            Manage your global weather dashboard and favorite locations.
+            Manage your global weather dashboard and get AI-powered insights for your favorite locations.
           </p>
         </header>
 
@@ -373,10 +346,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-4 h-4 text-sky-600" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Powered by SkyCast Weather Forecast</span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Powered by SkyCast Intelligence & Open-Meteo</span>
           </div>
           <p className="text-slate-300 text-[10px] uppercase tracking-widest">
-            &copy; 2026 Weather Systems. All rights reserved.
+            &copy; 2026 SkyCast Weather Systems. All rights reserved.
           </p>
         </div>
       </footer> 
